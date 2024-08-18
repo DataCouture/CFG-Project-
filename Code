@@ -1,0 +1,213 @@
+import csv
+sales_data = []  # List to store sales data
+expenditure_data = []  # List to store expenditure data
+months = []  # List to store month names
+
+#---Project Document Required Task 1:Read the data from the spreadsheet---
+def readData():
+# Open the existing CSV file for reading
+    with open('sales.csv', newline='') as csv_file:
+        reader = csv.reader(csv_file)
+        next(reader)  # Skip the header row
+
+        for row in reader:
+            month = row[1]
+            sales = int(row[2])
+            expenditure = int(row[3])
+            months.append(month)
+            sales_data.append(sales)
+            expenditure_data.append(expenditure)
+            print("Sales data :", row)
+
+#-----Project Document Required Task 2:Collect all of the sales from each month into a single list---
+def Collect_Data_inList():
+    with open('sales.csv', newline='') as csv_file:
+        reader = csv.reader(csv_file)
+        next(reader)  # Skip the header row
+        # Iterate over each row in the CSV file
+        for row in reader:
+            month = row[1]  # Assuming the month name is in the second column (index 1)
+            sales = int(row[2])  # Assuming the sales value is in the third column (index 2)
+            months.append(month)
+            sales_data.append(sales)
+        print("Sales of all months in a single list: ", sales_data)
+
+
+# --- Project Document Required Task 3:Output the total sales across all month---
+def Total_Sales():
+    all_sales = []
+    months = []
+    total_sales = 0
+    num_months = 0
+    with open('sales.csv', newline='') as csv_file:
+        reader = csv.reader(csv_file)
+        next(reader)  # Skip the header ro
+        for row in reader:
+            sales = float(row[2])
+            month = row[1]
+            all_sales.append(sales)
+            months.append(month)  # Append the month to the list
+            total_sales += sales
+            num_months += 1
+        print("All sales:", all_sales)
+        print("Total sales:", total_sales)
+
+#--- Project Document Extended Project Idea 2.a: Calculate the following: Monthly changes as a percentage
+def Monthly_Changes():
+   monthlychanges = 0
+   with open('sales.csv', newline='') as csv_file:
+       reader = csv.reader(csv_file)
+       next(reader)  # Skip the header row
+       for row in reader:
+            month = row[1]
+            sales = int(row[2])
+            expenditure = int(row[3])
+            monthlychanges = (expenditure-sales)/sales
+            percentage = str(round(monthlychanges*100)) + '%'
+            print(month," : ", percentage)
+
+#--- Project Document Extended Project Idea 2.b: Calculate the following: The average
+def Average_Sales():
+    all_sales = []
+    months = []
+    total_sales = 0
+    num_months = 0
+    with open('sales.csv', newline='') as csv_file:
+        reader = csv.reader(csv_file)
+        next(reader)  # Skip the header ro
+        for row in reader:
+            sales = float(row[2])
+            month = row[1]
+            all_sales.append(sales)
+            months.append(month)  # Append the month to the list
+            total_sales += sales
+            num_months += 1
+            average_sales = round(total_sales / num_months, 2)
+    print("Average Sales is: ", average_sales)
+
+#--- Project Document Extended Project Idea 2.c: Calculate the following: Months with the highest and lowest sales
+def Highest_Lowest_sales():
+    all_sales = []
+    months = []
+    with open('sales.csv', newline='') as csv_file:
+        reader = csv.reader(csv_file)
+        next(reader)  # Skip the header row
+        for row in reader:
+            sales = float(row[2])
+            month = row[1]
+            all_sales.append(sales)
+            months.append(month)  # Append the month to the list
+            max_sales = round(max(all_sales), 2)
+            min_sales = round(min(all_sales), 2)
+            max_month = months[all_sales.index(max_sales)]
+            min_month = months[all_sales.index(min_sales)]
+    print(f"The month with the maximum sales is {max_month} with total sales of {max_sales}")
+    print(f"The month with the minimum sales is {min_month} with total sales of {min_sales}")
+
+#--- Extended Project Idea 1: Identify all the months that are below a certain sales level
+def Sales_below_level():
+    all_sales = []
+    certain_sales_level = int(input("Enter the sale amount to check below level.:  "))
+    with open('sales.csv', newline='') as csv_file:
+        reader = csv.reader(csv_file)
+        next(reader)  # Skip the header ro
+        for row in reader:
+            sales = int(row[2])
+            month = row[1]
+            all_sales.append(sales)
+            months.append(month)  # Append the month to the list
+            below_sales_level_months = [months[i] for i in range(len(all_sales)) if all_sales[i] < certain_sales_level]
+        print("Months with sales below", certain_sales_level, ":", below_sales_level_months)
+
+#--- Extended Project Idea 2: List the  months in which expenditure is more than sales
+def months_expenditure_more_than_sales():
+    months = []
+
+    try:
+        with open('sales.csv', newline='') as csv_file:
+            reader = csv.reader(csv_file)
+            next(reader)
+
+            for row in reader:
+                month = row[1]
+                sales = float(row[2])
+                expenditure = float(row[3])
+
+                if expenditure > sales:
+                    months.append(month)
+
+        #return months
+        print("List of months where expenditure is more than the sales are: ",months)
+    except FileNotFoundError:
+        return "Sales data file not found."
+
+#--- Extended Project Idea 3: Calculate difference between expenditure and sales for a given month
+
+# ---Extended Project Idea : Calculate the profit for each month and output summary to new csv file
+def WritetoCSV():
+    # Create a new CSV file to show summary of sales
+    with open('sales_summary.csv', 'w', newline='') as newcsv_file:
+        # Write data to new CSv file.
+        writer = csv.writer(newcsv_file)
+        # Create a header row similar to the previous file
+        writer.writerow(['Year', 'Month', 'Sales', 'Expenditure', 'Profit'])
+
+        # Open an existing csv file to read data
+        with open('sales.csv', 'r', newline='') as csv_file:
+            reader = csv.reader(csv_file) # Read the data
+            next(reader) # Skip the header row
+            profit = 0
+            for row in reader:
+                sales = float(row[2])
+                expenditure = float(row[3])
+                profit = sales-expenditure
+                #profit = profit_after_expenditure()
+                row.append(profit)
+                writer.writerow(row)
+            print("Data Saved to a file")
+# Menu to select an option for a specific task
+while True:
+    print("\n Main Menu:")
+    print("1. Read the data from the spreadsheet")
+    print("2. Collect all of the sales from each month into a single list")
+    print("3. Output the total sales across all months")
+    print("4. Calculate Monthly changes as a percentage")
+    print("5. Calculate the average sales")
+    print("6. Show  Months with the highest and lowest sales")
+    print("7. Show  Months with the sales below certain level")
+    print("8. Show  Months where expenditure is more than sales")
+    print("9. Calculate Profit for all months and output Summary to a new CSV")
+    print ("10. Exit")
+    user_choice = int(input("Enter your choice as per the above menu: "))
+    if user_choice == 1:
+        readData()
+        break
+    elif user_choice == 2:
+        Collect_Data_inList()
+        break
+    elif user_choice == 3:
+        Total_Sales()
+        break
+    elif user_choice == 4:
+        Monthly_Changes()
+        break
+    elif user_choice == 5:
+        Average_Sales()
+        break
+    elif user_choice == 6:
+        Highest_Lowest_sales()
+        break
+    elif user_choice == 7:
+        Sales_below_level()
+        break
+    elif user_choice ==8:
+        months_expenditure_more_than_sales()
+        break
+    elif user_choice == 9:
+        WritetoCSV()
+        break
+    elif user_choice == 10:
+        break
+    else:
+        print("Invalid option")
+        break
